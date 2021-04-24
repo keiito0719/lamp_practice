@@ -38,11 +38,11 @@ function get_items($db, $is_open = false){
   ';
   if($is_open === true){
     $sql .= '
-      WHERE status = ?
+      WHERE status = 1
     ';
   }
 
-  return fetch_all_query($db, $sql[$is_open]);
+  return fetch_all_query($db, $sql);
 }
 
 function get_all_items($db){
@@ -109,13 +109,13 @@ function update_item_stock($db, $item_id, $stock){
     UPDATE
       items
     SET
-      stock = {$stock}
+      stock = ?
     WHERE
       item_id = ?
     LIMIT 1
   ";
   
-  return execute_query($db, $sql,[$item_id]);
+  return execute_query($db, $sql,[$stock,$item_id]);
 }
 
 function destroy_item($db, $item_id){
