@@ -36,11 +36,11 @@ function get_items($db, $is_open = false){
   ';
   if($is_open === true){
     $sql .= '
-      WHERE status = 1
+      WHERE status = ?
     ';
   }
 
-  return fetch_all_query($db, $sql);
+  return fetch_all_query($db, $sql,[$is_open]);
 }
 
 function get_all_items($db){
@@ -85,7 +85,7 @@ function insert_item($db, $name, $price, $stock, $filename, $status){
     VALUES(?, ?, ?, ?, ?);
   ";
 
-  return execute_query($db, $sql,[$name,$price,$stock,$filename,$status]);
+  return execute_query($db, $sql,[$name,$price,$stock,$filename,$status_value]);
 }
 
 function update_item_status($db, $item_id, $status){
@@ -107,9 +107,9 @@ function update_item_stock($db, $item_id, $stock){
     UPDATE
       items
     SET
-      stock = ?
+      stock = {$stock}
     WHERE
-      item_id = ?
+      item_id = {$item_id}
     LIMIT 1
   ";
   

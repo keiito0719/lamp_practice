@@ -16,7 +16,7 @@ function get_user($db, $user_id){
     LIMIT 1
   ";
 
-  return fetch_query($db, $sql,[$use_id]);
+  return fetch_query($db, $sql,[$user_id]);
 }
 
 function get_user_by_name($db, $name){
