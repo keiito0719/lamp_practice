@@ -14,6 +14,7 @@ $password = get_post('password');
 $password_confirmation = get_post('password_confirmation');
 
 $db = get_db_connect();
+$token=get_post('token');
 
 try{
   $result = regist_user($db, $name, $password, $password_confirmation);
