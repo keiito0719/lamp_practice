@@ -58,11 +58,12 @@ function get_user_cart($db, $user_id, $item_id){
 function add_cart($db, $user_id, $item_id ) {
   $cart = get_user_cart($db, $user_id, $item_id);
   if($cart === false){
+    
     return insert_cart($db, $user_id, $item_id);
   }
   return update_cart_amount($db, $cart['cart_id'], $cart['amount'] + 1);
 }
-
+// 指摘箇所
 function insert_cart($db, $user_id, $item_id, $amount = 1){
   $sql = "
     INSERT INTO
@@ -71,12 +72,12 @@ function insert_cart($db, $user_id, $item_id, $amount = 1){
         user_id,
         amount
       )
-    VALUES({$item_id}, {$user_id}, {$amount})
+    VALUES (?,?,?)
   ";
 
-  return execute_query($db, $sql);
+  return execute_query($db, $sql,[$item_id,$user_id,$amount]);
 }
-
+// 指摘箇所
 function update_cart_amount($db, $cart_id, $amount){
   $sql = "
     UPDATE
@@ -89,7 +90,7 @@ function update_cart_amount($db, $cart_id, $amount){
   ";
   return execute_query($db, $sql);
 }
-
+// 指摘箇所
 function delete_cart($db, $cart_id){
   $sql = "
     DELETE FROM
@@ -118,7 +119,7 @@ function purchase_carts($db, $carts){
   
   delete_user_carts($db, $carts[0]['user_id']);
 }
-
+// 指摘箇所
 function delete_user_carts($db, $user_id){
   $sql = "
     DELETE FROM

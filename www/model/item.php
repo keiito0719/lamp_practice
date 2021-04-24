@@ -4,6 +4,7 @@ require_once MODEL_PATH . 'db.php';
 
 // DB利用
 
+// 指摘箇所
 function get_item($db, $item_id){
   $sql = "
     SELECT
@@ -16,12 +17,13 @@ function get_item($db, $item_id){
     FROM
       items
     WHERE
-      item_id = {$item_id}
+      item_id = ?
   ";
 
-  return fetch_query($db, $sql);
+  return fetch_query($db, $sql,[$item_id]);
 }
 
+// 指摘箇所
 function get_items($db, $is_open = false){
   $sql = '
     SELECT
@@ -70,7 +72,7 @@ function regist_item_transaction($db, $name, $price, $stock, $status, $image, $f
   return false;
   
 }
-
+// 指摘箇所
 function insert_item($db, $name, $price, $stock, $filename, $status){
   $status_value = PERMITTED_ITEM_STATUSES[$status];
   $sql = "
@@ -87,7 +89,7 @@ function insert_item($db, $name, $price, $stock, $filename, $status){
 
   return execute_query($db, $sql);
 }
-
+// 指摘箇所
 function update_item_status($db, $item_id, $status){
   $sql = "
     UPDATE
@@ -95,13 +97,13 @@ function update_item_status($db, $item_id, $status){
     SET
       status = {$status}
     WHERE
-      item_id = {$item_id}
+      item_id = ?
     LIMIT 1
   ";
   
-  return execute_query($db, $sql);
+  return execute_query($db, $sql,[$status]);
 }
-
+// 指摘箇所
 function update_item_stock($db, $item_id, $stock){
   $sql = "
     UPDATE
@@ -109,11 +111,11 @@ function update_item_stock($db, $item_id, $stock){
     SET
       stock = {$stock}
     WHERE
-      item_id = {$item_id}
+      item_id = ?
     LIMIT 1
   ";
   
-  return execute_query($db, $sql);
+  return execute_query($db, $sql,[$item_id]);
 }
 
 function destroy_item($db, $item_id){
@@ -130,17 +132,17 @@ function destroy_item($db, $item_id){
   $db->rollback();
   return false;
 }
-
+// 指摘箇所
 function delete_item($db, $item_id){
   $sql = "
     DELETE FROM
       items
     WHERE
-      item_id = {$item_id}
+      item_id = ?
     LIMIT 1
   ";
   
-  return execute_query($db, $sql);
+  return execute_query($db, $sql,[$item_id]);
 }
 
 

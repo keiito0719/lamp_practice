@@ -99,7 +99,7 @@ function is_valid_password($password, $password_confirmation){
   }
   return $is_valid;
 }
-
+// 指摘箇所
 function insert_user($db, $name, $password){
   $sql = "
     INSERT INTO
