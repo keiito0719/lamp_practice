@@ -38,11 +38,11 @@ function get_items($db, $is_open = false){
   ';
   if($is_open === true){
     $sql .= '
-      WHERE status = 1
+      WHERE status = ?
     ';
   }
 
-  return fetch_all_query($db, $sql);
+  return fetch_all_query($db, $sql[$is_open]);
 }
 
 function get_all_items($db){
@@ -87,7 +87,7 @@ function insert_item($db, $name, $price, $stock, $filename, $status){
     VALUES('{$name}', {$price}, {$stock}, '{$filename}', {$status_value});
   ";
 
-  return execute_query($db, $sql);
+  return execute_query($db, $sql,[$name,$price,$stock,$filename,$status_value]);
 }
 // 指摘箇所
 function update_item_status($db, $item_id, $status){
@@ -95,13 +95,13 @@ function update_item_status($db, $item_id, $status){
     UPDATE
       items
     SET
-      status = {$status}
+      status = ?
     WHERE
       item_id = ?
     LIMIT 1
   ";
   
-  return execute_query($db, $sql,[$status]);
+  return execute_query($db, $sql,[$status,$item_id]);
 }
 // 指摘箇所
 function update_item_stock($db, $item_id, $stock){
