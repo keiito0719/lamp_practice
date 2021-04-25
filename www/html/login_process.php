@@ -17,14 +17,17 @@ $token=get_post('token');
 
 $user = login_as($db, $name, $password);
 
-    if( $user === false){
-      set_error('ログインに失敗しました。');
-      redirect_to(LOGIN_URL);
-    }
-
+if(is_valid_csrf_token($token)){
+  if( $user === false){
+    set_error('ログインに失敗しました。');
+    redirect_to(LOGIN_URL);
+  }
   set_message('ログインしました。');
   if ($user['type'] === USER_TYPE_ADMIN){
     redirect_to(ADMIN_URL);
   }
-
+}else{
+  set_error('不正なログインです。');
+  redirect_to(LOGIN_URL);
+}
 redirect_to(HOME_URL);
