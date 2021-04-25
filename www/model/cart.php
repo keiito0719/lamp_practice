@@ -21,9 +21,10 @@ function get_user_carts($db, $user_id){
     ON
       carts.item_id = items.item_id
     WHERE
-      carts.user_id = {$user_id}
+      carts.user_id = ?
   ";
-  return fetch_all_query($db, $sql);
+  // SQLの一部の場合「？」にしてあげる。？にユーザーIDセット
+  return fetch_all_query($db, $sql,[$user_id]);
 }
 
 function get_user_cart($db, $user_id, $item_id){
@@ -44,24 +45,25 @@ function get_user_cart($db, $user_id, $item_id){
       items
     ON
       carts.item_id = items.item_id
-    WHERE
-      carts.user_id = {$user_id}
+    WHERE　
+      carts.user_id = ？
     AND
-      items.item_id = {$item_id}
+      items.item_id = ？
   ";
-
-  return fetch_query($db, $sql);
+// 第三引数に代入。順番を合わせる（要素はプレースフォルダのじゅんばんに合わせる）[]で囲む
+  return fetch_query($db, $sql,[$user_id,$item_id]);
 
 }
 
 function add_cart($db, $user_id, $item_id ) {
   $cart = get_user_cart($db, $user_id, $item_id);
   if($cart === false){
+    
     return insert_cart($db, $user_id, $item_id);
   }
   return update_cart_amount($db, $cart['cart_id'], $cart['amount'] + 1);
 }
-
+// 指摘箇所
 function insert_cart($db, $user_id, $item_id, $amount = 1){
   $sql = "
     INSERT INTO
@@ -70,35 +72,35 @@ function insert_cart($db, $user_id, $item_id, $amount = 1){
         user_id,
         amount
       )
-    VALUES({$item_id}, {$user_id}, {$amount})
+    VALUES (?,?,?)
   ";
 
-  return execute_query($db, $sql);
+  return execute_query($db, $sql,[$item_id,$user_id,$amount]);
 }
-
+// 指摘箇所
 function update_cart_amount($db, $cart_id, $amount){
   $sql = "
     UPDATE
       carts
     SET
-      amount = {$amount}
+      amount = ?
     WHERE
-      cart_id = {$cart_id}
+      cart_id = ?
     LIMIT 1
   ";
-  return execute_query($db, $sql);
+  return execute_query($db, $sql,[$amount,$cart_id]);
 }
-
+// 指摘箇所
 function delete_cart($db, $cart_id){
   $sql = "
     DELETE FROM
       carts
     WHERE
-      cart_id = {$cart_id}
+      cart_id = ?
     LIMIT 1
   ";
 
-  return execute_query($db, $sql);
+  return execute_query($db, $sql,[$cart_id]);
 }
 
 function purchase_carts($db, $carts){
@@ -117,16 +119,16 @@ function purchase_carts($db, $carts){
   
   delete_user_carts($db, $carts[0]['user_id']);
 }
-
+// 指摘箇所
 function delete_user_carts($db, $user_id){
   $sql = "
     DELETE FROM
       carts
     WHERE
-      user_id = {$user_id}
+      user_id = ?
   ";
 
-  execute_query($db, $sql);
+  execute_query($db, $sql,[$user_id]);
 }
 
 
