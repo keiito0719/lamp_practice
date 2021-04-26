@@ -99,12 +99,16 @@ function is_valid_password($password, $password_confirmation){
   }
   return $is_valid;
 }
-
+// 指摘箇所
 function insert_user($db, $name, $password){
   $sql = "
     INSERT INTO
       users(name, password)
+<<<<<<< HEAD
     VALUES (?,? );
+=======
+    VALUES (?,?);
+>>>>>>> d501b9bf504eedaefcd56770edff269bc642e1df
   ";
 
   return execute_query($db, $sql,[$name,$password]);
