@@ -13,13 +13,24 @@ if(is_logined() === false){
 
 $db = get_db_connect();
 $user = get_login_user($db);
+$token=get_post('token');
 
-$carts = get_user_carts($db, $user['user_id']);
 
-if(purchase_carts($db, $carts) === false){
-  set_error('商品が購入できませんでした。');
+if(is_valid_csrf_token($token)){
+  try{
+    $carts= get_user_carts($db, $user['user_id']);
+    if(purchase_carts($db, $carts) === false){
+      set_error('商品が購入できませんでした。');
+      redirect_to(CART_URL);
+    }
+  }catch(PDOException $e){
+    set_error('商品が購入できませんでした。');
+    redirect_to(CART_URL);
+  }
+}else{
+  set_error('不正な操作です');
   redirect_to(CART_URL);
-} 
+}
 
 $total_price = sum_carts($carts);
 
