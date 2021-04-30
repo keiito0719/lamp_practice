@@ -104,7 +104,11 @@ function insert_user($db, $name, $password){
   $sql = "
     INSERT INTO
       users(name, password)
+<<<<<<< HEAD
+    VALUES (?,? );
+=======
     VALUES (?,?);
+>>>>>>> d501b9bf504eedaefcd56770edff269bc642e1df
   ";
 
   return execute_query($db, $sql,[$name,$password]);

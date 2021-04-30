@@ -17,7 +17,11 @@ function get_item($db, $item_id){
     FROM
       items
     WHERE
+<<<<<<< HEAD
+      item_id = ？
+=======
       item_id = ?
+>>>>>>> d501b9bf504eedaefcd56770edff269bc642e1df
   ";
 
   return fetch_query($db, $sql,[$item_id]);
@@ -38,11 +42,11 @@ function get_items($db, $is_open = false){
   ';
   if($is_open === true){
     $sql .= '
-      WHERE status = 1
+      WHERE status = ?
     ';
   }
 
-  return fetch_all_query($db, $sql);
+  return fetch_all_query($db, $sql,[$is_open]);
 }
 
 function get_all_items($db){
