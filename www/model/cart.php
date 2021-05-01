@@ -150,10 +150,32 @@ function purchase_carts($db, $carts){
 function insert_history($db,$user_id){
   $sql="
     INSERT INTO 
-    order_histories(user_id)
-    values(?)
+      order_histories(user_id)
+      values(?)
     ";
     return execute_query($db,$sql,array($user_id));
+}
+// ユーザ毎の購入履歴
+function get_history($db, $user_id){
+  $sql = "
+    SELECT
+      order_histories.order_id,
+      order_histories.creat_date,
+      SUM(order_details.price * order_details.amount) AS total
+    FROM
+      order_histories
+    JOIN
+      order_details
+    ON
+      order_histories.order_id = order_details.order_id
+    WHERE
+      user_id = ?
+    GROUP BY
+      order_id
+    ORDER BY
+      create_date desc
+  ";
+  return fetch_all_query($db, $sql, array($user_id));
 }
 
 // 購入明細に追加
@@ -169,6 +191,27 @@ function insert_detail($db,$order_id,$item_id,$price,$amount){
     VALUES(?,?,?,?)
   ";
   return execute_query($db,$sql,array($order_id,$item_id,$price,$amount));
+}
+function get_detail($db, $order_id){
+  $sql = "
+    SELECT
+      order_details.price,
+      order_details.amount,
+      order_histories.create_date
+      SUM(order_details.price * order_details.amount) AS subtotal,
+      items.name
+    FROM
+      order_details
+    JOIN
+      items
+    ON
+      order_details.item_id = items.item_id
+    WHERE
+      order_id = ?
+    GROUP BY
+      order_details.price, order_details.amount, order_histories.create_date,items.name
+  ";
+  return fetch_all_query($db, $sql, array($order_id));
 }
 
 // 指摘箇所
