@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- ホスト: mysql
--- 生成日時: 2021 年 5 月 01 日 19:40
+-- 生成日時: 2021 年 5 月 01 日 21:15
 -- サーバのバージョン： 5.7.33
 -- PHP のバージョン: 7.4.16
 
@@ -39,6 +39,10 @@ CREATE TABLE `order_details` (
 --
 
 INSERT INTO `order_details` (`order_id`, `item_id`, `price`, `amount`) VALUES
+(0, 32, 18000, 1),
+(0, 39, 150, 1),
+(0, 40, 100, 1),
+(0, 41, 5000, 1),
 (8, 32, 18000, 1),
 (9, 32, 18000, 1),
 (9, 40, 100, 1),
@@ -59,7 +63,7 @@ INSERT INTO `order_details` (`order_id`, `item_id`, `price`, `amount`) VALUES
 CREATE TABLE `order_histories` (
   `order_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `create_date` datetime NOT NULL
+  `create_date` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --

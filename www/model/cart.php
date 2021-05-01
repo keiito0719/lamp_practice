@@ -119,8 +119,6 @@ function purchase_carts($db, $carts){
   // トランザクション開始
   $db->beginTransaction();
   try{
-  // 現在日時を取得
-    $now_date=date('Y-m-d H:i:s');
     //購入履歴へ追加(カート内商品を0番目から追加)
     insert_history($db,$carts[0]['user_id']);
     //order_idをデータベースへ登録
@@ -146,6 +144,7 @@ function purchase_carts($db, $carts){
     throw $e;
   }
 }
+
 // 購入履歴へ追加
 function insert_history($db,$user_id){
   $sql="
