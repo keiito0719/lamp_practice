@@ -2,7 +2,7 @@
 require_once MODEL_PATH . 'functions.php';
 require_once MODEL_PATH . 'db.php';
 
-// カート内のuser_idを取得
+// カート内のuser_idから取得
 function get_user_carts($db, $user_id){
   $sql = "
     SELECT
@@ -121,14 +121,15 @@ function purchase_carts($db, $carts){
   try{
   // 現在日時を取得
     $now_date=date('Y-m-d H:i:s');
-    //購入履歴へ追加
-    insert_history($db,['user_id']);
+    //購入履歴へ追加(カート内商品を0番目から追加)
+    insert_history($db,$carts[0]['user_id']);
     //order_idをデータベースへ登録
     $order_id=$db->lastInsertId();
    
     // ＄carts繰り返し処理
     foreach($carts as $cart){
       insert_detail($db,$order_id,$cart['item_id'],$cart['price'],$cart['amount']);
+      // 在庫変動（在庫ー購入数が成立しなければエラー表示）
       if(update_item_stock(
           $db, 
           $cart['item_id'], 
@@ -137,6 +138,7 @@ function purchase_carts($db, $carts){
         set_error($cart['name'] . 'の購入に失敗しました。');
       }
     }
+    // カートの中身削除
     delete_user_carts($db, $carts[0]['user_id']);
     $db->commit();
   } catch (PDOException $e) {
@@ -144,24 +146,25 @@ function purchase_carts($db, $carts){
     throw $e;
   }
 }
-
+// 購入履歴へ追加
 function insert_history($db,$user_id){
   $sql="
-    INSERT INTO order_histories(
-    user_id,
+    INSERT INTO 
+    order_histories(user_id)
     values(?)
     ";
     return execute_query($db,$sql,array($user_id));
 }
 
+// 購入明細に追加
 function insert_detail($db,$order_id,$item_id,$price,$amount){
   $sql="
     INSERT INTO 
-     order_detail(
-       order_id,
-       item_id,
-       price,
-       amount
+      order_details(
+        order_id,
+        item_id,
+        price,
+        amount
       )
     VALUES(?,?,?,?)
   ";

@@ -5,6 +5,7 @@ require_once MODEL_PATH . 'db.php';
 // DB利用
 
 // 指摘箇所
+// item_idの登録
 function get_item($db, $item_id){
   $sql = "
     SELECT
@@ -17,17 +18,14 @@ function get_item($db, $item_id){
     FROM
       items
     WHERE
-<<<<<<< HEAD
       item_id = ？
-=======
-      item_id = ?
->>>>>>> d501b9bf504eedaefcd56770edff269bc642e1df
   ";
 
   return fetch_query($db, $sql,[$item_id]);
 }
 
 // 指摘箇所
+// ステータスが公開の場合、SQL文を取得
 function get_items($db, $is_open = false){
   $sql = '
     SELECT
@@ -40,6 +38,7 @@ function get_items($db, $is_open = false){
     FROM
       items
   ';
+  //非公開の場合SQL文は非表示
   if($is_open === true){
     $sql .= '
       WHERE status = ?
@@ -56,7 +55,7 @@ function get_all_items($db){
 function get_open_items($db){
   return get_items($db, true);
 }
-
+// 商品を登録する
 function regist_item($db, $name, $price, $stock, $status, $image){
   $filename = get_upload_filename($image);
   if(validate_item($name, $price, $stock, $filename, $status) === false){
