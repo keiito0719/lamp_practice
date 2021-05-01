@@ -23,7 +23,7 @@ define('FINISH_URL', '/finish.php');
 define('ADMIN_URL', '/admin.php');
 // 課題2データ投入箇所
 define('HISTORY_URL', '/order_history.php');
-define('DETAIL_URL','/order_detail');
+define('DETAIL_URL','/order_detail.php');
 
 
 define('REGEXP_ALPHANUMERIC', '/\A[0-9a-zA-Z]+\z/');
