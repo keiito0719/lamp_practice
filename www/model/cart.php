@@ -1,6 +1,7 @@
 <?php 
 require_once MODEL_PATH . 'functions.php';
 require_once MODEL_PATH . 'db.php';
+$date = date("m月d日 H:i:s");
 
 // カート内のuser_idから取得
 function get_user_carts($db, $user_id){
@@ -159,7 +160,7 @@ function get_history($db, $user_id){
   $sql = "
     SELECT
       order_histories.order_id,
-      order_histories.creat_date,
+      order_histories.create_date,
       SUM(order_details.price * order_details.amount) AS total
     FROM
       order_histories
