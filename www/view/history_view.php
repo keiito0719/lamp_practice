@@ -8,8 +8,8 @@
 
   <body>
     <h1>購入履歴</h1>
-
-    <!-- メッセージ・エラーメッセージ -->
+       <!-- メッセージ・エラーメッセージ -->
+       
     <?php include VIEW_PATH. 'templates/messages.php'; ?>
 
     <!-- 購入履歴 -->

@@ -124,6 +124,7 @@ function purchase_carts($db, $carts){
     insert_history($db,$carts[0]['user_id']);
     //order_idをデータベースへ登録
     $order_id=$db->lastInsertId();
+  
    
     // ＄carts繰り返し処理
     foreach($carts as $cart){
