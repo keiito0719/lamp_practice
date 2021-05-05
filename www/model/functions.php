@@ -1,5 +1,6 @@
 <?php
 
+
 function dd($var){
   var_dump($var);
   exit();
@@ -100,6 +101,7 @@ function delete_image($filename){
   return false;
   
 }
+
 
 
 

@@ -2,10 +2,12 @@
 <html lang="ja">
   <head>
     <meta charset="UTF-8">
+    <?php include VIEW_PATH . 'templates/head.php'; ?>
     <title>購入明細</title>
   </head>
 
   <body>
+  <?php include VIEW_PATH . 'templates/header_logined.php'; ?>
     <h1>購入明細</h1>
 
     <!-- メッセージ・エラーメッセージ -->
@@ -49,6 +51,7 @@
       </thead>
       <tbody>
       <?php foreach($details as $detail){ ?>
+
         <tr>
           <td><?php print($detail['name']); ?></td>
           <td><?php print($detail['price']); ?></td>

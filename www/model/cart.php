@@ -1,7 +1,7 @@
 <?php 
 require_once MODEL_PATH . 'functions.php';
 require_once MODEL_PATH . 'db.php';
-$date = date("m月d日 H:i:s");
+
 
 // カート内のuser_idから取得
 function get_user_carts($db, $user_id){

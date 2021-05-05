@@ -3,10 +3,12 @@
 <html lang="ja">
   <head>
     <meta charset="UTF-8">
+    <?php include VIEW_PATH . 'templates/head.php'; ?>
     <title>購入履歴</title>
   </head>
 
   <body>
+  <?php include VIEW_PATH . 'templates/header_logined.php'; ?>
     <h1>購入履歴</h1>
        <!-- メッセージ・エラーメッセージ -->
        
