@@ -16,7 +16,8 @@ $db = get_db_connect();
 $user = get_login_user($db);
 $histories = get_history($db, $user['user_id']);
 $now_date=date('Y-m-d H:i:s');
-
+// 1つの関数で作るか
+// オーダーIDをヒストリーの取得に繋げる
 $order_id = get_post('order_id');
 $details = get_detail($db, $order_id);
 include_once VIEW_PATH. 'detail_view.php';

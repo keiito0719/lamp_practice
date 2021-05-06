@@ -119,16 +119,21 @@ function purchase_carts($db, $carts){
   // 課題2コード入力箇所
   // トランザクション開始
   $db->beginTransaction();
-  try{
+ 
     //購入履歴へ追加(カート内商品を0番目から追加)
-    insert_history($db,$carts[0]['user_id']);
+    
+    if(insert_history($db,$carts[0]['user_id'])===false){
+       set_error("履歴データの追加に失敗しました");
+    }
     //order_idをデータベースへ登録
     $order_id=$db->lastInsertId();
   
    
     // ＄carts繰り返し処理
     foreach($carts as $cart){
-      insert_detail($db,$order_id,$cart['item_id'],$cart['price'],$cart['amount']);
+      if(insert_detail($db,$order_id,$cart['item_id'],$cart['price'],$cart['amount'])===false){
+        set_error($cart['name'] . "の明細データの追加に失敗しました。");
+      }
       // 在庫変動（在庫ー購入数が成立しなければエラー表示）
       if(update_item_stock(
           $db, 
@@ -140,22 +145,25 @@ function purchase_carts($db, $carts){
     }
     // カートの中身削除
     delete_user_carts($db, $carts[0]['user_id']);
+    if(has_error()===false){
+
     $db->commit();
-  } catch (PDOException $e) {
+    }else{
     $db->rollback();
-    throw $e;
-  }
+    }
 }
 
 // 購入履歴へ追加
 function insert_history($db,$user_id){
   $sql="
     INSERT INTO 
-      order_histories(user_id)
-      values(?)
+      order_histories(user_id,create_date)
+      values(?,now())
     ";
     return execute_query($db,$sql,array($user_id));
 }
+
+
 // ユーザ毎の購入履歴
 function get_history($db, $user_id){
   $sql = "
@@ -172,12 +180,13 @@ function get_history($db, $user_id){
     WHERE
       user_id = ?
     GROUP BY
-      order_id
+      order_id 
     ORDER BY
       create_date desc
   ";
   return fetch_all_query($db, $sql, array($user_id));
 }
+
 
 // 購入明細に追加
 function insert_detail($db,$order_id,$item_id,$price,$amount){
@@ -194,12 +203,12 @@ function insert_detail($db,$order_id,$item_id,$price,$amount){
   return execute_query($db,$sql,array($order_id,$item_id,$price,$amount));
 }
 function get_detail($db, $order_id){
+    // 管理者用
   $sql = "
     SELECT
       order_details.price,
       order_details.amount,
-      order_histories.create_date
-      SUM(order_details.price * order_details.amount) AS subtotal,
+      order_details.price * order_details.amount AS subtotal,
       items.name
     FROM
       order_details
@@ -209,11 +218,12 @@ function get_detail($db, $order_id){
       order_details.item_id = items.item_id
     WHERE
       order_id = ?
-    GROUP BY
-      order_details.price, order_details.amount, order_histories.create_date,items.name
   ";
   return fetch_all_query($db, $sql, array($order_id));
 }
+// 一般用は別関数または条件分岐にて【user_idとorderIDを結んであげる必要あり】→orderIDは書き換えられる可能性あり
+
+
 
 // 指摘箇所
 function delete_user_carts($db, $user_id){

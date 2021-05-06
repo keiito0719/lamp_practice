@@ -51,7 +51,6 @@
       </thead>
       <tbody>
       <?php foreach($details as $detail){ ?>
-
         <tr>
           <td><?php print($detail['name']); ?></td>
           <td><?php print($detail['price']); ?></td>

@@ -14,8 +14,15 @@ if(is_logined() === false){
 
 $db = get_db_connect();
 $user = get_login_user($db);
+// 引数で切り替える　OR 2パターンの変数作成※条件分岐
+// コントローラの中で判断
+// // function get_login_user($db){
+//   $login_user_id = get_session('user_id');
+// admin.phpより引用
+// if(is_admin($user) === false){
+//   redirect_to(LOGIN_URL);
+// }
+//   return get_user($db, $login_user_id);がユーザー切り替えの変数
 $histories = get_history($db, $user['user_id']);
-$now_date=date('Y-m-d H:i:s');
-$order_id = get_post('order_id');
 
 include_once VIEW_PATH. 'history_view.php';
