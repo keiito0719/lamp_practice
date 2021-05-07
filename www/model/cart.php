@@ -120,7 +120,7 @@ function purchase_carts($db, $carts){
   // トランザクション開始
   $db->beginTransaction();
  
-    //購入履歴へ追加(カート内商品を0番目から追加)
+    //購入履歴へ追加(カート内商品を1番目から追加)
     
     if(insert_history($db,$carts[0]['user_id'])===false){
        set_error("履歴データの追加に失敗しました");
@@ -165,6 +165,7 @@ function insert_history($db,$user_id){
 
 
 // ユーザ毎の購入履歴
+// 一般用
 function get_history($db, $user_id){
   $sql = "
     SELECT
@@ -186,6 +187,26 @@ function get_history($db, $user_id){
   ";
   return fetch_all_query($db, $sql, array($user_id));
 }
+
+// 管理者用
+function admin_history($db, $order_id){
+  $sql="
+  SELECT
+    order_histories.user_id,
+    order_histories.create_date,
+    SUM(order_details.price * order_details.amount) AS total
+  FROM
+    order_histories
+  JOIN
+    order_details
+  ON
+    order_histories.order_id = order_details.order_id
+  ORDER BY
+    create_date desc
+  ";
+return fetch_all_query($db, $sql, $order_id);
+}
+  
 
 
 // 購入明細に追加

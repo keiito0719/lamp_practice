@@ -29,7 +29,7 @@
           <td><?php print($history['create_date']); ?></td>
           <td><?php print($history['total']); ?></td>
           <td>
-            <form method="post" action="detail.php">
+            <form method="post" action="cart.php">
               <input type="submit" value="購入明細表示">
               <input type="hidden" name="order_id" value="<?php print($history['order_id']); ?>">
             </form>
@@ -51,6 +51,7 @@
       </thead>
       <tbody>
       <?php foreach($details as $detail){ ?>
+
         <tr>
           <td><?php print($detail['name']); ?></td>
           <td><?php print($detail['price']); ?></td>
