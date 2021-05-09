@@ -164,8 +164,8 @@ function insert_history($db,$user_id){
 }
 
 
-// ユーザ毎の購入履歴
-// 一般用
+// 購入履歴
+// 一般用（ログインユーザーごとの履歴）
 function get_history($db, $user_id){
   $sql = "
     SELECT
@@ -188,28 +188,31 @@ function get_history($db, $user_id){
   return fetch_all_query($db, $sql, array($user_id));
 }
 
-// 管理者用
-function admin_history($db, $order_id){
-  $sql="
-  SELECT
-    order_histories.user_id,
-    order_histories.create_date,
-    SUM(order_details.price * order_details.amount) AS total
-  FROM
-    order_histories
-  JOIN
-    order_details
-  ON
-    order_histories.order_id = order_details.order_id
-  ORDER BY
-    create_date desc
+// 管理者用（登録ユーザーごとの履歴）
+function get_admin_history($db){
+  $sql = "
+    SELECT
+      order_histories.user_id,
+      order_histories.order_id,
+      order_histories.create_date,
+      SUM(order_details.price * order_details.amount) AS total
+    FROM
+      order_histories
+    JOIN
+      order_details
+    ON
+      order_histories.order_id = order_details.order_id
+    GROUP BY
+      order_id 
+    ORDER BY
+      create_date desc
   ";
-return fetch_all_query($db, $sql, $order_id);
+  return fetch_all_query($db, $sql);
 }
   
 
 
-// 購入明細に追加
+// 購入明細へ追加
 function insert_detail($db,$order_id,$item_id,$price,$amount){
   $sql="
     INSERT INTO 
@@ -222,9 +225,10 @@ function insert_detail($db,$order_id,$item_id,$price,$amount){
     VALUES(?,?,?,?)
   ";
   return execute_query($db,$sql,array($order_id,$item_id,$price,$amount));
-}
-function get_detail($db, $order_id){
-    // 管理者用
+      }
+
+  // 購入明細
+function get_detail($db,$order_id){
   $sql = "
     SELECT
       order_details.price,
@@ -240,9 +244,62 @@ function get_detail($db, $order_id){
     WHERE
       order_id = ?
   ";
-  return fetch_all_query($db, $sql, array($order_id));
+  return fetch_all_query($db,$sql, array($order_id));
 }
+
+//購入明細表示（該当注文番号ユーザ名、日時、合計）※管理者用
+function insert_admin_detail($db,$user_id,$order_id){
+
+  $sql="
+    INSERT INTO 
+      order_histories(user_id,order_id,create_date)
+      values(?,?,now())
+    ";
+    return execute_query($db,$sql,array($user_id),array($order_id));
+}
+  function get_admin_detail($db,$user_id,$order_id){
+  $sql = "
+  SELECT
+    order_histories.user_id,
+    order_histories.order_id,
+    order_histories.create_date,
+    SUM(order_details.price * order_details.amount) AS total
+  FROM
+    order_histories
+  JOIN
+    order_details
+  ON
+    order_histories.order_id = order_details.order_id
+  JOIN
+    users
+  ON
+    order_histories.user_id= users.user_id
+ WHERE
+    order_id=? 
+  ORDER BY
+    create_date desc
+";
+    return fetch_all_query($db, $sql, array($user_id),array($order_id));
+  }
+
+  // orderidごとの表示が目的
+
 // 一般用は別関数または条件分岐にて【user_idとorderIDを結んであげる必要あり】→orderIDは書き換えられる可能性あり
+
+// function get_history_detail($db, $order_id){
+//   // 管理者用
+// $sql = "
+// SELECT
+// order_histories.order_id,
+// order_histories.create_date,
+// SUM(order_details.price * order_details.amount) AS total
+// FROM
+//   order_historyies
+// WHERE
+//   order_id = ?
+// ";
+// return fetch_all_query($db, $sql, array($order_id));
+// }
 
 
 

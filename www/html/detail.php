@@ -14,11 +14,22 @@ if(is_logined() === false){
 
 $db = get_db_connect();
 $user = get_login_user($db);
+
 $histories = get_history($db, $user['user_id']);
-$now_date=date('Y-m-d H:i:s');
+
+// $admin_histories=get_admin_history($db,$order_id);
+
 // 1つの関数で作るか
 // オーダーIDをヒストリーの取得に繋げる
 
+// $histories_detail=get_history_detail($db,$order_id);
+
+// $histories_detail = get_history_detail($db,$order_id);
+
 $order_id = get_post('order_id');
-$details = get_detail($db, $order_id);
+
+$details = get_detail($db,$order_id);
+
+$admin_details=get_admin_detail($db,$user_id,$order_id);
+
 include_once VIEW_PATH. 'detail_view.php';

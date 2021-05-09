@@ -22,18 +22,12 @@ $user = get_login_user($db);
 // // function get_login_user($db){
 //   $login_user_id = get_session('user_id');
 // admin.phpより引用
-// if(is_admin($user) === false){
-//   redirect_to(LOGIN_URL);
-// }
+
 //   return get_user($db, $login_user_id);がユーザー切り替えの変数
 // 追加箇所
   // $admin_histories=admin_history($db, $order_id['order_id']);
   // include_once VIEW_PATH. 'admin_history_view.php';
-
-
-// if(is_admin($user) === true){
-//   include_once VIEW_PATH. 'admin_history_view.php';
-// }
+$admin_histories=get_admin_history($db);
 
 $histories = get_history($db, $user['user_id']);
 

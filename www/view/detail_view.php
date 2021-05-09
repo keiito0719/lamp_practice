@@ -13,13 +13,43 @@
     <!-- メッセージ・エラーメッセージ -->
     <?php include VIEW_PATH. 'templates/messages.php'; ?>
 
-    <!-- 購入明細 -->
+    <!-- 購入履歴 -->
+    <?php if(!empty($admin_histories) && is_admin($user) === true){ ?>
+    <table>
+      <thead>
+        <tr>
+          <th>ユーザー</th>
+          <th>注文番号</th>
+          <th>購入日時</th>
+          <th>合計金額</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+      <?php foreach($admin_detailes as $admin_detail){ ?>
+        <tr>
+          <td><?php print($admin_detail['user_id']); ?></td>
+          <td><?php print($admin_detail['order_id']); ?></td>
+          <td><?php print($admin_detail['create_date']); ?></td>
+          <td><?php print($admin_detail['total']); ?></td>
+          <td>
+            <form method="post" action="detail.php">
+              <input type="submit" value="購入明細表示">
+              <input type="hidden" name="order_id" value="<?php print($admin_history['order_id']); ?>">
+            </form>
+          </td>
+        </tr>
+      <?php } ?>
+      </tbody>
+    </table>
+    <?php } elseif(!empty($histories)){ ?>
     <table>
       <thead>
         <tr>
           <th>注文番号</th>
           <th>購入日時</th>
           <th>合計金額</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -29,7 +59,7 @@
           <td><?php print($history['create_date']); ?></td>
           <td><?php print($history['total']); ?></td>
           <td>
-            <form method="post" action="cart.php">
+            <form method="post" action="detail.php">
               <input type="submit" value="購入明細表示">
               <input type="hidden" name="order_id" value="<?php print($history['order_id']); ?>">
             </form>
@@ -38,6 +68,8 @@
       <?php } ?>
       </tbody>
     </table>
+    <?php } ?>
+    
 
     <!-- 購入明細 -->
     <table>
