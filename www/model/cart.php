@@ -188,6 +188,7 @@ function get_history($db, $user_id){
   return fetch_all_query($db, $sql, array($user_id));
 }
 
+// 購入履歴
 // 管理者用（登録ユーザーごとの履歴）
 function get_admin_history($db){
   $sql = "
@@ -228,6 +229,7 @@ function insert_detail($db,$order_id,$item_id,$price,$amount){
       }
 
   // 購入明細
+  // 取得order_idのみ明細
 function get_detail($db,$order_id){
   $sql = "
     SELECT
@@ -247,27 +249,19 @@ function get_detail($db,$order_id){
   return fetch_all_query($db,$sql, array($order_id));
 }
 
-//購入明細表示（該当注文番号ユーザ名、日時、合計）※管理者用
-function insert_admin_detail($db,$user_id,$order_id){
+//購入明細
+// 該当注文番号ユーザ名、日時、合計表示※管理者用
 
-  $sql="
-    INSERT INTO 
-      order_histories(user_id,order_id,create_date)
-      values(?,?,now())
-    ";
-    return execute_query($db,$sql,array($user_id),array($order_id));
-}
-  function get_admin_detail($db,$user_id,$order_id){
+  function get_admin_detail($db,$order_id){
   $sql = "
   SELECT
-    order_histories.user_id,
-    order_histories.order_id,
+    order_details.order_id,
     order_histories.create_date,
-    SUM(order_details.price * order_details.amount) AS total
+    order_details.price * order_details.amount AS subtotal,
   FROM
-    order_histories
-  JOIN
     order_details
+  JOIN
+    order_histories
   ON
     order_histories.order_id = order_details.order_id
   JOIN
@@ -279,29 +273,12 @@ function insert_admin_detail($db,$user_id,$order_id){
   ORDER BY
     create_date desc
 ";
-    return fetch_all_query($db, $sql, array($user_id),array($order_id));
+    return fetch_all_query($db, $sql,array($order_id));
   }
 
   // orderidごとの表示が目的
 
 // 一般用は別関数または条件分岐にて【user_idとorderIDを結んであげる必要あり】→orderIDは書き換えられる可能性あり
-
-// function get_history_detail($db, $order_id){
-//   // 管理者用
-// $sql = "
-// SELECT
-// order_histories.order_id,
-// order_histories.create_date,
-// SUM(order_details.price * order_details.amount) AS total
-// FROM
-//   order_historyies
-// WHERE
-//   order_id = ?
-// ";
-// return fetch_all_query($db, $sql, array($order_id));
-// }
-
-
 
 // 指摘箇所
 function delete_user_carts($db, $user_id){

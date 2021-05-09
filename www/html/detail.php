@@ -22,14 +22,10 @@ $histories = get_history($db, $user['user_id']);
 // 1つの関数で作るか
 // オーダーIDをヒストリーの取得に繋げる
 
-// $histories_detail=get_history_detail($db,$order_id);
-
-// $histories_detail = get_history_detail($db,$order_id);
-
 $order_id = get_post('order_id');
-
+// // 管理者用
+// $admin_details=get_admin_detail($db,$order_id);
+// 一般者用
 $details = get_detail($db,$order_id);
-
-$admin_details=get_admin_detail($db,$user_id,$order_id);
 
 include_once VIEW_PATH. 'detail_view.php';

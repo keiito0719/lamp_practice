@@ -15,6 +15,7 @@
     <?php include VIEW_PATH. 'templates/messages.php'; ?>
 
       <!-- 購入履歴 -->
+      <!-- 管理者用 -->
       <?php if(!empty($admin_histories) && is_admin($user) === true){ ?>
     <table>
       <thead>
@@ -43,6 +44,8 @@
       <?php } ?>
       </tbody>
     </table>
+    
+    <!-- 一般者用 -->
     <?php } elseif(!empty($histories)){ ?>
     <table>
       <thead>

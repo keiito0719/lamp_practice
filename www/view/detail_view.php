@@ -14,6 +14,7 @@
     <?php include VIEW_PATH. 'templates/messages.php'; ?>
 
     <!-- 購入履歴 -->
+    <!-- 管理者用 -->
     <?php if(!empty($admin_histories) && is_admin($user) === true){ ?>
     <table>
       <thead>
@@ -26,7 +27,6 @@
         </tr>
       </thead>
       <tbody>
-      <?php foreach($admin_detailes as $admin_detail){ ?>
         <tr>
           <td><?php print($admin_detail['user_id']); ?></td>
           <td><?php print($admin_detail['order_id']); ?></td>
@@ -39,9 +39,10 @@
             </form>
           </td>
         </tr>
-      <?php } ?>
+     
       </tbody>
     </table>
+    <!-- 一般ユーザ用 -->
     <?php } elseif(!empty($histories)){ ?>
     <table>
       <thead>
@@ -53,6 +54,7 @@
         </tr>
       </thead>
       <tbody>
+        <!-- foreach文を使う必要は無い？ -->
       <?php foreach($histories as $history){ ?>
         <tr>
           <td><?php print($history['order_id']); ?></td>
