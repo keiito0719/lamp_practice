@@ -16,37 +16,8 @@
 
       <!-- 購入履歴 -->
       <!-- 管理者用 -->
-      <?php if(!empty($admin_histories) && is_admin($user) === true){ ?>
-    <table>
-      <thead>
-        <tr>
-          <th>ユーザー</th>
-          <th>注文番号</th>
-          <th>購入日時</th>
-          <th>合計金額</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-      <?php foreach($admin_histories as $admin_history){ ?>
-        <tr>
-          <td><?php print($admin_history['user_id']); ?></td>
-          <td><?php print($admin_history['order_id']); ?></td>
-          <td><?php print($admin_history['create_date']); ?></td>
-          <td><?php print($admin_history['total']); ?></td>
-          <td>
-            <form method="post" action="detail.php">
-              <input type="submit" value="購入明細表示">
-              <input type="hidden" name="order_id" value="<?php print($admin_history['order_id']); ?>">
-            </form>
-          </td>
-        </tr>
-      <?php } ?>
-      </tbody>
-    </table>
-    
-    <!-- 一般者用 -->
-    <?php } elseif(!empty($histories)){ ?>
+      <?php if(!empty($histories)){ ?>
+
     <table>
       <thead>
         <tr>
@@ -59,9 +30,10 @@
       <tbody>
       <?php foreach($histories as $history){ ?>
         <tr>
-          <td><?php print($history['order_id']); ?></td>
-          <td><?php print($history['create_date']); ?></td>
-          <td><?php print($history['total']); ?></td>
+          <!-- h関数でエスケープ処理必要 34〜36-->
+          <td><?php print(h($history['order_id'])); ?></td>
+          <td><?php print(h($history['create_date'])); ?></td>
+          <td><?php print(h($history['total'])); ?></td>
           <td>
             <form method="post" action="detail.php">
               <input type="submit" value="購入明細表示">

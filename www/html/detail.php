@@ -15,17 +15,25 @@ if(is_logined() === false){
 $db = get_db_connect();
 $user = get_login_user($db);
 
-$histories = get_history($db, $user['user_id']);
-
-// $admin_histories=get_admin_history($db,$order_id);
-
+// $histories = get_history($db, $user['user_id']);
 // 1つの関数で作るか
 // オーダーIDをヒストリーの取得に繋げる
 
 $order_id = get_post('order_id');
-// // 管理者用
-// $admin_details=get_admin_detail($db,$order_id);
-// 一般者用
-$details = get_detail($db,$order_id);
+
+if(is_admin($user) === true){
+  $histories=head_admin_detail($db,$order_id);
+  $details=get_admin_detail($db,$order_id);  
+  var_dump($details,$order_id);
+}else{
+  $histories=head_general_detail($db,$order_id,$user_id);
+  $details=get_general_detail($db,$order_id,$user_id);
+  var_dump($histories,$details);
+  
+}
 
 include_once VIEW_PATH. 'detail_view.php';
+
+// viewページのif文は必要なし。controller側で切り分けを行う。
+// detailに関しても関数を4つ用意し、if文にて2つの関数を選ぶ仕組みを作る。
+// まずは一般者用の関数ネームを考える必要あり。

@@ -14,16 +14,15 @@ if(is_logined() === false){
 
 $db = get_db_connect();
 
-
-
 $user = get_login_user($db);
 // 引数で切り替える　OR 2パターンの変数作成※条件分岐
 // 追加箇所
  
 //管理者用 
-$admin_histories=get_admin_history($db);
-// 一般者用
-$histories = get_history($db, $user['user_id']);
-
+if(is_admin($user) === true){
+  $histories=get_admin_history($db);
+}else{
+  $histories = get_general_history($db, $user['user_id']);
+}
 include_once VIEW_PATH. 'history_view.php';
 

@@ -165,8 +165,8 @@ function insert_history($db,$user_id){
 
 
 // 購入履歴
-// 一般用（ログインユーザーごとの履歴）
-function get_history($db, $user_id){
+// 一般ユーザー用（ログインユーザーごとの履歴）
+function get_general_history($db, $user_id){
   $sql = "
     SELECT
       order_histories.order_id,
@@ -181,15 +181,15 @@ function get_history($db, $user_id){
     WHERE
       user_id = ?
     GROUP BY
-      order_id 
+      order_histories.order_id
     ORDER BY
       create_date desc
   ";
-  return fetch_all_query($db, $sql, array($user_id));
+  return fetch_all_query($db, $sql,[$user_id]);
 }
 
 // 購入履歴
-// 管理者用（登録ユーザーごとの履歴）
+// 管理ユーザー用（登録ユーザーごとの履歴）
 function get_admin_history($db){
   $sql = "
     SELECT
@@ -204,7 +204,7 @@ function get_admin_history($db){
     ON
       order_histories.order_id = order_details.order_id
     GROUP BY
-      order_id 
+      order_histories.order_id
     ORDER BY
       create_date desc
   ";
@@ -225,17 +225,38 @@ function insert_detail($db,$order_id,$item_id,$price,$amount){
       )
     VALUES(?,?,?,?)
   ";
-  return execute_query($db,$sql,array($order_id,$item_id,$price,$amount));
+  return execute_query($db,$sql,[$order_id,$item_id,$price,$amount]);
       }
 
-  // 購入明細
-  // 取得order_idのみ明細
-function get_detail($db,$order_id){
+ // 購入明細
+// 管理ユーザー用（ヘッド詳細）
+function head_admin_detail($db,$order_id){
+  $sql = "
+  SELECT
+    order_histories.order_id,
+    order_histories.create_date,
+    SUM(order_details.price * order_details.amount) AS total
+  FROM
+    order_histories
+  JOIN
+    order_details
+  ON
+    order_histories.order_id = order_details.order_id
+  WHERE
+    order_histories.order_id=? 
+  GROUP BY
+    order_histories.order_id
+";
+    return fetch_all_query($db, $sql,[$order_id]);
+  }
+// 購入明細
+// 管理ユーザー用（購入詳細）
+function get_admin_detail($db,$order_id){
   $sql = "
     SELECT
       order_details.price,
       order_details.amount,
-      order_details.price * order_details.amount AS subtotal,
+      SUM(order_details.price * order_details.amount) AS subtotal,
       items.name
     FROM
       order_details
@@ -244,41 +265,66 @@ function get_detail($db,$order_id){
     ON
       order_details.item_id = items.item_id
     WHERE
-      order_id = ?
+      order_details.order_id = ?
+    GROUP BY
+      order_details.price, order_details.amount,items.name
   ";
-  return fetch_all_query($db,$sql, array($order_id));
+  return fetch_all_query($db,$sql,[$order_id]);
 }
-
-//購入明細
-// 該当注文番号ユーザ名、日時、合計表示※管理者用
-
-  function get_admin_detail($db,$order_id){
+// 購入明細
+// 一般ユーザー用（ヘッド詳細）
+//  一般用は別関数または条件分岐にて【user_idとorderIDを結んであげる必要あり】→orderIDは書き換えられる可能性あり
+function head_general_detail($db,$order_id,$user_id){
   $sql = "
   SELECT
-    order_details.order_id,
+    order_histories.order_id,
     order_histories.create_date,
-    order_details.price * order_details.amount AS subtotal,
+    SUM(order_details.price * order_details.amount) AS total
   FROM
-    order_details
-  JOIN
     order_histories
+  JOIN
+    order_details
   ON
     order_histories.order_id = order_details.order_id
-  JOIN
-    users
-  ON
-    order_histories.user_id= users.user_id
- WHERE
-    order_id=? 
-  ORDER BY
-    create_date desc
+  WHERE
+    order_histories.order_id=?
+  AND
+  order_histories.user_id =?
+  GROUP BY
+    order_histories.order_id,order_histories.user_id 
 ";
-    return fetch_all_query($db, $sql,array($order_id));
+    return fetch_all_query($db, $sql,[$order_id,$user_id]);
+  }
+  // 購入明細
+  // 一般ユーザー用（購入詳細）
+  function get_general_detail($db,$order_id,$user_id){
+    $sql = "
+      SELECT
+        order_details.price,
+        order_details.amount,
+        SUM(order_details.price * order_details.amount) AS subtotal,
+        items.name
+      FROM
+        order_details
+      JOIN
+        items
+      ON
+        order_details.item_id = items.item_id
+      JOIN
+        order_histories
+      ON
+        order_details.order_id=order_histories.order_id
+      WHERE
+        order_details.order_id =?
+      AND
+        order_histories.user_id=?
+      GROUP BY
+        order_details.price, order_details.amount,items.name,order_histories.user_id
+    ";
+    return fetch_all_query($db,$sql,[$order_id,$user_id]);
   }
 
-  // orderidごとの表示が目的
 
-// 一般用は別関数または条件分岐にて【user_idとorderIDを結んであげる必要あり】→orderIDは書き換えられる可能性あり
 
 // 指摘箇所
 function delete_user_carts($db, $user_id){
