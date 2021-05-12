@@ -25,7 +25,7 @@ function get_user_carts($db, $user_id){
     WHERE
       carts.user_id = ?
   ";
-  // SQLの一部の場合「？」にしてあげる。？にユーザーIDセット
+  // SQLの一部の場合プレースホルダー「？」にしてあげる。？にユーザーIDセット
   return fetch_all_query($db, $sql,[$user_id]);
 }
 
@@ -179,7 +179,7 @@ function get_general_history($db, $user_id){
     ON
       order_histories.order_id = order_details.order_id
     WHERE
-      user_id = ?
+      order_histories.user_id = ?
     GROUP BY
       order_histories.order_id
     ORDER BY
@@ -287,9 +287,9 @@ function head_general_detail($db,$order_id,$user_id){
   ON
     order_histories.order_id = order_details.order_id
   WHERE
-    order_histories.order_id=?
+    order_histories.order_id = ?
   AND
-  order_histories.user_id =?
+    order_histories.user_id = ?
   GROUP BY
     order_histories.order_id,order_histories.user_id 
 ";
@@ -313,11 +313,11 @@ function head_general_detail($db,$order_id,$user_id){
       JOIN
         order_histories
       ON
-        order_details.order_id=order_histories.order_id
+        order_details.order_id = order_histories.order_id
       WHERE
-        order_details.order_id =?
+        order_details.order_id = ?
       AND
-        order_histories.user_id=?
+        order_histories.user_id = ?
       GROUP BY
         order_details.price, order_details.amount,items.name,order_histories.user_id
     ";

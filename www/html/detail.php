@@ -29,11 +29,10 @@ if(is_admin($user) === true){
   $histories=head_general_detail($db,$order_id,$user_id);
   $details=get_general_detail($db,$order_id,$user_id);
   var_dump($histories,$details);
-  
 }
 
 include_once VIEW_PATH. 'detail_view.php';
 
 // viewページのif文は必要なし。controller側で切り分けを行う。
 // detailに関しても関数を4つ用意し、if文にて2つの関数を選ぶ仕組みを作る。
-// まずは一般者用の関数ネームを考える必要あり。
+// 関数ネーム4つを考える必要あり。
