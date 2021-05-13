@@ -18,7 +18,7 @@ function get_item($db, $item_id){
     FROM
       items
     WHERE
-      item_id = ？
+      item_id =?
   ";
 
   return fetch_query($db, $sql,[$item_id]);
@@ -41,11 +41,11 @@ function get_items($db, $is_open = false){
   //非公開の場合SQL文は非表示
   if($is_open === true){
     $sql .= '
-      WHERE status = ?
+      WHERE status
     ';
   }
 
-  return fetch_all_query($db, $sql,[$is_open]);
+  return fetch_all_query($db, $sql);
 }
 
 function get_all_items($db){

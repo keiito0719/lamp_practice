@@ -23,7 +23,7 @@ function get_user_carts($db, $user_id){
     ON
       carts.item_id = items.item_id
     WHERE
-      carts.user_id = ?
+      carts.user_id =?
   ";
   // SQLの一部の場合プレースホルダー「？」にしてあげる。？にユーザーIDセット
   return fetch_all_query($db, $sql,[$user_id]);
@@ -47,11 +47,11 @@ function get_user_cart($db, $user_id, $item_id){
     JOIN
       items
     ON
-      carts.item_id = items.item_id
+      carts.item_id=items.item_id
     WHERE　
-      carts.user_id = ？
+      carts.user_id=?
     AND
-      items.item_id = ？
+      items.item_id=?
   ";
 // 第三引数に代入。順番を合わせる（要素はプレースフォルダのじゅんばんに合わせる）[]で囲む
   return fetch_query($db, $sql,[$user_id,$item_id]);
@@ -89,9 +89,9 @@ function update_cart_amount($db, $cart_id, $amount){
     UPDATE
       carts
     SET
-      amount = ?
+      amount=?
     WHERE
-      cart_id = ?
+      cart_id=?
     LIMIT 1
   ";
   return execute_query($db, $sql,[$amount,$cart_id]);
@@ -103,7 +103,7 @@ function delete_cart($db, $cart_id){
     DELETE FROM
       carts
     WHERE
-      cart_id = ?
+      cart_id=?
     LIMIT 1
   ";
 
@@ -256,7 +256,7 @@ function get_admin_detail($db,$order_id){
     SELECT
       order_details.price,
       order_details.amount,
-      SUM(order_details.price * order_details.amount) AS subtotal,
+      order_details.price * order_details.amount AS subtotal,
       items.name
     FROM
       order_details
@@ -266,8 +266,6 @@ function get_admin_detail($db,$order_id){
       order_details.item_id = items.item_id
     WHERE
       order_details.order_id = ?
-    GROUP BY
-      order_details.price, order_details.amount,items.name
   ";
   return fetch_all_query($db,$sql,[$order_id]);
 }
@@ -287,11 +285,11 @@ function head_general_detail($db,$order_id,$user_id){
   ON
     order_histories.order_id = order_details.order_id
   WHERE
-    order_histories.order_id = ?
+    order_histories.order_id =?
   AND
-    order_histories.user_id = ?
+    order_histories.user_id =?
   GROUP BY
-    order_histories.order_id,order_histories.user_id 
+    order_histories.order_id
 ";
     return fetch_all_query($db, $sql,[$order_id,$user_id]);
   }
@@ -302,7 +300,7 @@ function head_general_detail($db,$order_id,$user_id){
       SELECT
         order_details.price,
         order_details.amount,
-        SUM(order_details.price * order_details.amount) AS subtotal,
+        order_details.price * order_details.amount AS subtotal,
         items.name
       FROM
         order_details
@@ -315,11 +313,9 @@ function head_general_detail($db,$order_id,$user_id){
       ON
         order_details.order_id = order_histories.order_id
       WHERE
-        order_details.order_id = ?
+        order_details.order_id=?
       AND
-        order_histories.user_id = ?
-      GROUP BY
-        order_details.price, order_details.amount,items.name,order_histories.user_id
+        order_histories.user_id=?
     ";
     return fetch_all_query($db,$sql,[$order_id,$user_id]);
   }
