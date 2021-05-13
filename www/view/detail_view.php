@@ -30,12 +30,6 @@
           <td><?php print(h($history['order_id'])); ?></td>
           <td><?php print(h($history['create_date'])); ?></td>
           <td><?php print(h($history['total'])); ?></td>
-          <td>
-            <form method="post" action="detail.php">
-              <input type="submit" value="購入明細表示">
-              <input type="hidden" name="order_id" value="<?php print($history['order_id']); ?>">
-            </form>
-          </td>
         </tr>
         <?php } ?>
       </tbody>
