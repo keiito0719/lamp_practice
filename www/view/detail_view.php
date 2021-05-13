@@ -15,7 +15,7 @@
 
     <!-- 購入履歴 -->
     <!-- 管理者用 -->
-    <!-- <?php if(!empty($histories)){ ?> -->
+    <?php if(!empty($histories)){ ?>
     <table>
       <thead>
         <tr>

@@ -179,7 +179,7 @@ function get_general_history($db, $user_id){
     ON
       order_histories.order_id = order_details.order_id
     WHERE
-      order_histories.user_id = ?
+      order_histories.user_id=?
     GROUP BY
       order_histories.order_id
     ORDER BY
@@ -285,9 +285,9 @@ function head_general_detail($db,$order_id,$user_id){
   ON
     order_histories.order_id = order_details.order_id
   WHERE
-    order_histories.order_id =?
+    order_histories.order_id=?
   AND
-    order_histories.user_id =?
+    order_histories.user_id=?
   GROUP BY
     order_histories.order_id
 ";
@@ -298,6 +298,7 @@ function head_general_detail($db,$order_id,$user_id){
   function get_general_detail($db,$order_id,$user_id){
     $sql = "
       SELECT
+        order_histories.user_id,
         order_details.price,
         order_details.amount,
         order_details.price * order_details.amount AS subtotal,
@@ -307,7 +308,7 @@ function head_general_detail($db,$order_id,$user_id){
       JOIN
         items
       ON
-        order_details.item_id = items.item_id
+        order_details.item_id=items.item_id
       JOIN
         order_histories
       ON

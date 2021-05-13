@@ -26,8 +26,8 @@ if(is_admin($user) === true){
   $details=get_admin_detail($db,$order_id);  
   var_dump($details,$order_id);
 }else{
-  $histories=head_general_detail($db,$order_id,$user_id['user_id']);
-  $details=get_general_detail($db,$order_id,$user_id['user_id']);
+  $histories=head_general_detail($db,$order_id,$user['user_id']);
+  $details=get_general_detail($db,$order_id,$user['user_id']);
   var_dump($histories,$details);
 }
 
