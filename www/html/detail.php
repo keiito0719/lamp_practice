@@ -1,14 +1,14 @@
 <?php
 require_once '../conf/const.php';
-require_once MODEL_PATH. 'functions.php';
-require_once MODEL_PATH. 'user.php';
-require_once MODEL_PATH. 'item.php';
-require_once MODEL_PATH. 'cart.php';
+require_once MODEL_PATH . 'functions.php';
+require_once MODEL_PATH . 'user.php';
+require_once MODEL_PATH . 'item.php';
+require_once MODEL_PATH . 'cart.php';
 
 
 session_start();
 
-if(is_logined() === false){
+if (is_logined() === false) {
   redirect_to(LOGIN_URL);
 }
 
@@ -21,15 +21,15 @@ $user = get_login_user($db);
 
 $order_id = get_post('order_id');
 
-if(is_admin($user) === true){
-  $histories=head_admin_detail($db,$order_id);
-  $details=get_admin_detail($db,$order_id);  
-}else{
-  $histories=head_general_detail($db,$order_id,$user['user_id']);
-  $details=get_general_detail($db,$order_id,$user['user_id']);
+if (is_admin($user) === true) {
+  $histories = head_admin_detail($db, $order_id);
+  $details = get_admin_detail($db, $order_id);
+} else {
+  $histories = head_general_detail($db, $order_id, $user['user_id']);
+  $details = get_general_detail($db, $order_id, $user['user_id']);
 }
 
-include_once VIEW_PATH. 'detail_view.php';
+include_once VIEW_PATH . 'detail_view.php';
 
 // viewページのif文は必要なし。controller側で切り分けを行う。
 // detailに関しても関数を4つ用意し、if文にて2つの関数を選ぶ仕組みを作る。
