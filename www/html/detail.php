@@ -24,11 +24,9 @@ $order_id = get_post('order_id');
 if(is_admin($user) === true){
   $histories=head_admin_detail($db,$order_id);
   $details=get_admin_detail($db,$order_id);  
-  var_dump($details,$order_id);
 }else{
   $histories=head_general_detail($db,$order_id,$user['user_id']);
   $details=get_general_detail($db,$order_id,$user['user_id']);
-  var_dump($histories,$details);
 }
 
 include_once VIEW_PATH. 'detail_view.php';

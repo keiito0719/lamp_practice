@@ -179,7 +179,8 @@ function get_general_history($db, $user_id){
     ON
       order_histories.order_id = order_details.order_id
     WHERE
-      order_histories.user_id=?
+      order_histories.user_id=
+      ?
     GROUP BY
       order_histories.order_id
     ORDER BY
