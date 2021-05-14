@@ -58,6 +58,8 @@ function get_user_cart($db, $user_id, $item_id){
 
 }
 
+
+
 // カートに追加したuser_id,item_idから取得（カートに追加※同じ商品があった場合は個数のみアップデート）
 function add_cart($db, $user_id, $item_id ) {
   $cart = get_user_cart($db, $user_id, $item_id);
