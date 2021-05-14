@@ -41,7 +41,7 @@ function get_items($db, $is_open = false){
   //非公開の場合SQL文は非表示
   if($is_open === true){
     $sql .= '
-      WHERE status
+      WHERE status = 1
     ';
   }
 
