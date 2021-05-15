@@ -1,8 +1,10 @@
 <?php
 
+
 function get_db_connect(){
   // MySQL用のDSN文字列
   $dsn = 'mysql:dbname='. DB_NAME .';host='. DB_HOST .';charset='.DB_CHARSET;
+
  
   try {
     // データベースに接続

@@ -1,5 +1,6 @@
 <?php
 
+
 function dd($var){
   var_dump($var);
   exit();
@@ -53,7 +54,7 @@ function get_errors(){
   set_session('__errors',  array());
   return $errors;
 }
-
+// エラーの有無を返している
 function has_error(){
   return isset($_SESSION['__errors']) && count($_SESSION['__errors']) !== 0;
 }
@@ -100,6 +101,7 @@ function delete_image($filename){
   return false;
   
 }
+
 
 
 

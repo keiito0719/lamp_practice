@@ -5,7 +5,9 @@ require_once MODEL_PATH . 'db.php';
 // DB利用
 
 // 指摘箇所
-function get_item($db, $item_id){
+// item_idの登録
+function get_item($db, $item_id)
+{
   $sql = "
     SELECT
       item_id, 
@@ -17,18 +19,16 @@ function get_item($db, $item_id){
     FROM
       items
     WHERE
-<<<<<<< HEAD
-      item_id = ？
-=======
-      item_id = ?
->>>>>>> d501b9bf504eedaefcd56770edff269bc642e1df
+      item_id =?
   ";
 
-  return fetch_query($db, $sql,[$item_id]);
+  return fetch_query($db, $sql, [$item_id]);
 }
 
 // 指摘箇所
-function get_items($db, $is_open = false){
+// ステータスが公開の場合、SQL文を取得
+function get_items($db, $is_open = false)
+{
   $sql = '
     SELECT
       item_id, 
@@ -40,44 +40,51 @@ function get_items($db, $is_open = false){
     FROM
       items
   ';
-  if($is_open === true){
+  //非公開の場合SQL文は非表示
+  if ($is_open === true) {
     $sql .= '
-      WHERE status = ?
+      WHERE status = 1
     ';
   }
 
-  return fetch_all_query($db, $sql,[$is_open]);
+  return fetch_all_query($db, $sql);
 }
 
-function get_all_items($db){
+function get_all_items($db)
+{
   return get_items($db);
 }
 
-function get_open_items($db){
+function get_open_items($db)
+{
   return get_items($db, true);
 }
-
-function regist_item($db, $name, $price, $stock, $status, $image){
+// 商品を登録する
+function regist_item($db, $name, $price, $stock, $status, $image)
+{
   $filename = get_upload_filename($image);
-  if(validate_item($name, $price, $stock, $filename, $status) === false){
+  if (validate_item($name, $price, $stock, $filename, $status) === false) {
     return false;
   }
   return regist_item_transaction($db, $name, $price, $stock, $status, $image, $filename);
 }
 
-function regist_item_transaction($db, $name, $price, $stock, $status, $image, $filename){
+function regist_item_transaction($db, $name, $price, $stock, $status, $image, $filename)
+{
   $db->beginTransaction();
-  if(insert_item($db, $name, $price, $stock, $filename, $status) 
-    && save_image($image, $filename)){
+  if (
+    insert_item($db, $name, $price, $stock, $filename, $status)
+    && save_image($image, $filename)
+  ) {
     $db->commit();
     return true;
   }
   $db->rollback();
   return false;
-  
 }
 // 指摘箇所
-function insert_item($db, $name, $price, $stock, $filename, $status){
+function insert_item($db, $name, $price, $stock, $filename, $status)
+{
   $status_value = PERMITTED_ITEM_STATUSES[$status];
   $sql = "
     INSERT INTO
@@ -91,10 +98,11 @@ function insert_item($db, $name, $price, $stock, $filename, $status){
     VALUES(?, ?, ?, ?, ?);
   ";
 
-  return execute_query($db, $sql,[$name,$price,$stock,$filename,$status_value]);
+  return execute_query($db, $sql, [$name, $price, $stock, $filename, $status_value]);
 }
 // 指摘箇所
-function update_item_status($db, $item_id, $status){
+function update_item_status($db, $item_id, $status)
+{
   $sql = "
     UPDATE
       items
@@ -104,11 +112,12 @@ function update_item_status($db, $item_id, $status){
       item_id = ?
     LIMIT 1
   ";
-  
-  return execute_query($db, $sql,[$status,$item_id]);
+
+  return execute_query($db, $sql, [$status, $item_id]);
 }
 // 指摘箇所
-function update_item_stock($db, $item_id, $stock){
+function update_item_stock($db, $item_id, $stock)
+{
   $sql = "
     UPDATE
       items
@@ -118,18 +127,21 @@ function update_item_stock($db, $item_id, $stock){
       item_id = ?
     LIMIT 1
   ";
-  
-  return execute_query($db, $sql,[$stock,$item_id]);
+
+  return execute_query($db, $sql, [$stock, $item_id]);
 }
 
-function destroy_item($db, $item_id){
+function destroy_item($db, $item_id)
+{
   $item = get_item($db, $item_id);
-  if($item === false){
+  if ($item === false) {
     return false;
   }
   $db->beginTransaction();
-  if(delete_item($db, $item['item_id'])
-    && delete_image($item['image'])){
+  if (
+    delete_item($db, $item['item_id'])
+    && delete_image($item['image'])
+  ) {
     $db->commit();
     return true;
   }
@@ -137,7 +149,8 @@ function destroy_item($db, $item_id){
   return false;
 }
 // 指摘箇所
-function delete_item($db, $item_id){
+function delete_item($db, $item_id)
+{
   $sql = "
     DELETE FROM
       items
@@ -145,18 +158,20 @@ function delete_item($db, $item_id){
       item_id = ?
     LIMIT 1
   ";
-  
-  return execute_query($db, $sql,[$item_id]);
+
+  return execute_query($db, $sql, [$item_id]);
 }
 
 
 // 非DB
 
-function is_open($item){
+function is_open($item)
+{
   return $item['status'] === 1;
 }
 
-function validate_item($name, $price, $stock, $filename, $status){
+function validate_item($name, $price, $stock, $filename, $status)
+{
   $is_valid_item_name = is_valid_item_name($name);
   $is_valid_item_price = is_valid_item_price($price);
   $is_valid_item_stock = is_valid_item_stock($stock);
@@ -169,45 +184,49 @@ function validate_item($name, $price, $stock, $filename, $status){
     && $is_valid_item_filename
     && $is_valid_item_status;
 }
-
-function is_valid_item_name($name){
+function is_valid_item_name($name)
+{
   $is_valid = true;
-  if(is_valid_length($name, ITEM_NAME_LENGTH_MIN, ITEM_NAME_LENGTH_MAX) === false){
-    set_error('商品名は'. ITEM_NAME_LENGTH_MIN . '文字以上、' . ITEM_NAME_LENGTH_MAX . '文字以内にしてください。');
+  if (is_valid_length($name, ITEM_NAME_LENGTH_MIN, ITEM_NAME_LENGTH_MAX) === false) {
+    set_error('商品名は' . ITEM_NAME_LENGTH_MIN . '文字以上、' . ITEM_NAME_LENGTH_MAX . '文字以内にしてください。');
     $is_valid = false;
   }
   return $is_valid;
 }
 
-function is_valid_item_price($price){
+function is_valid_item_price($price)
+{
   $is_valid = true;
-  if(is_positive_integer($price) === false){
+  if (is_positive_integer($price) === false) {
     set_error('価格は0以上の整数で入力してください。');
     $is_valid = false;
   }
   return $is_valid;
 }
 
-function is_valid_item_stock($stock){
+function is_valid_item_stock($stock)
+{
   $is_valid = true;
-  if(is_positive_integer($stock) === false){
+  if (is_positive_integer($stock) === false) {
     set_error('在庫数は0以上の整数で入力してください。');
     $is_valid = false;
   }
   return $is_valid;
 }
 
-function is_valid_item_filename($filename){
+function is_valid_item_filename($filename)
+{
   $is_valid = true;
-  if($filename === ''){
+  if ($filename === '') {
     $is_valid = false;
   }
   return $is_valid;
 }
 
-function is_valid_item_status($status){
+function is_valid_item_status($status)
+{
   $is_valid = true;
-  if(isset(PERMITTED_ITEM_STATUSES[$status]) === false){
+  if (isset(PERMITTED_ITEM_STATUSES[$status]) === false) {
     $is_valid = false;
   }
   return $is_valid;
