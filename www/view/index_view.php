@@ -10,7 +10,15 @@
 <body>
 <!-- emplates/header_logined.phpをインクルードする。（外部ファイルを取り込む） -->
   <?php include VIEW_PATH . 'templates/header_logined.php'; ?>
-  
+  <form method="post" action="sort.php" >
+    <select name="sort">
+      <option value="new_order">新着順</option>
+      <option value="cost_up">価格の安い順</option>
+      <option value="cost_down">価格の高い順</option>
+    </select>
+      <input type="submit" name="sort_button" value="並べ替え">
+      <input type="hidden" name="sorting" value="sort_item">
+  </form>
 
   <div class="container">
     <h1>商品一覧</h1>

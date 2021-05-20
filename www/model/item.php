@@ -38,7 +38,7 @@ function get_items($db, $is_open = false)
       image,
       status
     FROM
-      items
+      items  
   ';
   //非公開の場合SQL文は非表示
   if ($is_open === true) {
@@ -231,3 +231,28 @@ function is_valid_item_status($status)
   }
   return $is_valid;
 }
+
+// function get_new_order($db, $is_open = false)
+// {
+//   $sql = '
+//     SELECT
+//       item_id, 
+//       name,
+//       stock,
+//       price,
+//       image,
+//       status,
+//       created
+//     FROM
+//       items
+//     ORDER BY
+//       created desc
+//   ';
+//   //非公開の場合SQL文は非表示
+//   if ($is_open === true) {
+//     $sql .= '
+//       WHERE status = 1
+//     ';
+//   }
+//   return fetch_all_query($db, $sql);
+// }
