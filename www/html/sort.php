@@ -14,16 +14,15 @@ if (is_logined() === false) {
 $db = get_db_connect();
 $user = get_login_user($db);
 
-if(isset($_GET['sort_button'])){
-    if ($_GET['sort'] === 'cost_up') {
-        $items= get_open_items($db);
-    }elseif($_GET['sort']==='cost_down'){
+if(isset($_GET['sort'])){
+    if (isset($_GET['cost_up']) === true) {
+        $items = get_open_items($db);
+    }elseif(isset($_GET['cost_down']) === true){
         $items = get_open_items($db);
     }else{
         $items = get_open_items($db);
     }
-    $_SESSION['sort']='sort';
-    var_dump($_SESSION['sort']);
+    var_dump($_GET['sort']);
 }
 
 
