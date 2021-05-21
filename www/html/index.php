@@ -12,8 +12,12 @@ if(is_logined() === false){
 
 $db = get_db_connect();
 $user = get_login_user($db);
+$sort =get_get('sort');
+// 三項演算子
+// 左が成立したら右が実行
+$sort=($sort==='') ? 'new_order' : $sort;
 
-$items = get_open_items($db);
+$items = get_open_items($db,$sort);
 
 
 $token=get_csrf_token();
