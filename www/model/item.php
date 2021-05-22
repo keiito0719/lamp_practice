@@ -26,6 +26,7 @@ function get_item($db, $item_id) {
 
 // 指摘箇所
 // ステータスが公開の場合、SQL文を取得　オプション引数（省略しても良い）
+// sortには投入されることのない数値を入れる。
 function get_items($db, $is_open = false, $sort = null) {
   $sql = '
     SELECT
