@@ -9,7 +9,9 @@
 </head>
 <body>
 <!-- emplates/header_logined.phpをインクルードする。（外部ファイルを取り込む） -->
+
   <?php include VIEW_PATH . 'templates/header_logined.php'; ?>
+  <div class="container text-right" > 
   <form method="get" >
     <select name="sort">
       <option value="new_order">新着順</option>
@@ -18,7 +20,7 @@
     </select>
       <input type="submit" value="並べ替え">
   </form>
-
+</div>
   <div class="container">
     <h1>商品一覧</h1>
     <!--  templates/messages.phpをインクルードする-->

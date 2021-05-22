@@ -67,6 +67,7 @@ function get_all_items($db) {
   return get_items($db);
 }
 
+// 課題3アルゴリズム変更箇所
 function get_open_items($db,$sort) {
   return get_items($db, true,$sort);
 }
